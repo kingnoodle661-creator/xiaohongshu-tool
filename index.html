@@ -282,37 +282,37 @@
 
     .usage-tip strong { color: var(--red); }
 
-    .header .pro-badge {
+    .header .reward-badge {
       display: none;
       margin-top: 10px;
       font-size: .72rem;
-      background: linear-gradient(135deg, #ffd700, #ffb347);
-      color: #7c4a00;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: #fff;
       padding: 4px 14px;
       border-radius: 20px;
       font-weight: 700;
     }
 
-    .header .pro-badge.show { display: inline-block; }
+    .header .reward-badge.show { display: inline-block; }
 
-    .btn-unlock {
+    .btn-ad-unlock {
       width: 100%;
       padding: 13px;
-      background: linear-gradient(135deg, #ff6b35 0%, #ff2442 100%);
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: #fff;
       border: none;
       border-radius: 10px;
       font-size: .95rem;
       font-weight: 700;
       cursor: pointer;
-      margin-top: 12px;
-      box-shadow: 0 4px 14px rgba(255, 36, 66, .35);
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(102, 126, 234, .35);
       animation: pulse-btn 2.5s ease-in-out infinite;
       letter-spacing: .5px;
     }
 
-    .btn-unlock:active { transform: scale(.98); }
-    .btn-unlock.hidden { display: none; }
+    .btn-ad-unlock:active { transform: scale(.98); }
+    .btn-ad-unlock.hidden { display: none; }
 
     @keyframes pulse-btn {
       0%, 100% { box-shadow: 0 4px 14px rgba(255, 36, 66, .35); }
@@ -419,66 +419,47 @@
       margin-bottom: 6px;
     }
 
-    .modal-body .price {
-      font-size: 1.6rem;
+    .modal-body .ad-desc {
+      font-size: .85rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal-body .ad-desc small {
+      display: block;
+      margin-top: 8px;
+      font-size: .75rem;
+      color: #999;
+    }
+
+    .ad-countdown {
+      display: none;
+      font-size: 3rem;
       font-weight: 800;
       color: var(--red);
-      margin: 8px 0 16px;
+      margin: 24px 0;
+      animation: count-pop .4s ease;
     }
 
-    .modal-body .price small {
-      font-size: .85rem;
-      font-weight: 500;
-      color: var(--text-secondary);
+    .ad-countdown.show { display: block; }
+
+    @keyframes count-pop {
+      from { transform: scale(.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
     }
 
-    .qr-img {
-      width: 180px;
-      height: 180px;
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      object-fit: cover;
-      margin: 0 auto 14px;
-      display: block;
+    .ad-done {
+      display: none;
+      font-size: 1rem;
+      color: #2ecc71;
+      font-weight: 700;
+      margin: 20px 0;
     }
 
-    .modal-tip {
-      font-size: .8rem;
-      color: var(--text-secondary);
-      margin-bottom: 14px;
-      line-height: 1.5;
-    }
+    .ad-done.show { display: block; }
 
-    .modal-features {
-      text-align: left;
-      font-size: .78rem;
-      color: var(--text-secondary);
-      background: var(--red-light);
-      border-radius: 10px;
-      padding: 12px 14px;
-      margin-bottom: 16px;
-      line-height: 1.8;
-    }
-
-    .modal-features li { list-style: none; }
-    .modal-features li::before { content: '✓ '; color: var(--red); font-weight: 700; }
-
-    .modal-input {
-      width: 100%;
-      padding: 11px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: .9rem;
-      margin-bottom: 12px;
-      font-family: inherit;
-    }
-
-    .modal-input:focus {
-      outline: none;
-      border-color: var(--red);
-    }
-
-    .btn-confirm-pay {
+    .btn-watch-ad {
       width: 100%;
       padding: 13px;
       background: var(--red);
@@ -490,69 +471,8 @@
       cursor: pointer;
     }
 
-    .btn-confirm-pay:active { background: var(--red-dark); }
-
-    .success-overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,.6);
-      z-index: 1100;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .success-overlay.show { display: flex; }
-
-    .success-card {
-      background: #fff;
-      border-radius: 20px;
-      padding: 36px 28px;
-      text-align: center;
-      max-width: 320px;
-      animation: success-pop .5s cubic-bezier(.34, 1.56, .64, 1);
-    }
-
-    @keyframes success-pop {
-      from { opacity: 0; transform: scale(.5); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    .success-icon {
-      font-size: 3rem;
-      margin-bottom: 12px;
-      animation: success-spin .6s ease .2s both;
-    }
-
-    @keyframes success-spin {
-      from { transform: rotate(-20deg) scale(0); }
-      to { transform: rotate(0) scale(1); }
-    }
-
-    .success-card h2 {
-      font-size: 1.2rem;
-      margin-bottom: 8px;
-      color: var(--red);
-    }
-
-    .success-card p {
-      font-size: .85rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .btn-success-ok {
-      padding: 11px 36px;
-      background: var(--red);
-      color: #fff;
-      border: none;
-      border-radius: 24px;
-      font-size: .9rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
+    .btn-watch-ad:active { background: var(--red-dark); }
+    .btn-watch-ad:disabled { opacity: .5; cursor: not-allowed; }
 
     .toast {
       position: fixed;
@@ -586,15 +506,15 @@
   <div class="header">
     <h1>📕 小红书爆款内容生成器</h1>
     <p>输入主题，一键出标题、封面、结构、完整笔记</p>
-    <span class="pro-badge" id="proBadge">👑 完整版已解锁</span>
+    <span class="reward-badge" id="rewardBadge">🎉 无限使用中</span>
   </div>
 
   <div class="container">
     <div class="status-bar">
-      <div class="usage-tip" id="usageTip">免费版每日限<strong>3</strong>次，解锁后无限使用</div>
+      <div class="usage-tip" id="usageTip">今日免费剩余：<strong>3</strong>次</div>
     </div>
 
-    <button class="btn-unlock" id="btnUnlock">🔓 解锁完整版 ¥9.9</button>
+    <button class="btn-ad-unlock hidden" id="btnAdUnlock">🎥 观看广告解锁12小时无限使用</button>
 
     <div class="card">
       <div class="card-title"><span class="dot"></span>创作设置</div>
@@ -651,8 +571,8 @@
         <div class="output-body locked-block" id="templatesWrap">
           <div id="templatesContent"></div>
           <div class="lock-overlay" id="lockTemplates" style="display:none">
-            <p>🔒 解锁完整版查看 3 种内容结构模板</p>
-            <button type="button" class="unlock-inline">立即解锁 ¥9.9</button>
+            <p>🔒 观看广告解锁12小时无限使用</p>
+            <button type="button" class="unlock-inline">观看广告</button>
           </div>
         </div>
       </div>
@@ -665,8 +585,8 @@
         <div class="output-body note-body locked-block" id="noteWrap">
           <div id="noteContent"></div>
           <div class="lock-overlay" id="lockNote" style="display:none">
-            <p>🔒 解锁完整版查看可直接发布的完整笔记</p>
-            <button type="button" class="unlock-inline">立即解锁 ¥9.9</button>
+            <p>🔒 观看广告解锁12小时无限使用</p>
+            <button type="button" class="unlock-inline">观看广告</button>
           </div>
         </div>
       </div>
@@ -675,177 +595,335 @@
     <div class="footer-hint" id="footerHint">👉 <span>复制即可直接发布小红书</span></div>
   </div>
 
-  <!-- 支付弹窗 -->
-  <div class="modal-overlay" id="payModal">
+  <!-- 模拟广告弹窗 -->
+  <div class="modal-overlay" id="adModal">
     <div class="modal">
-      <button class="modal-close" id="modalClose" aria-label="关闭">×</button>
+      <button class="modal-close" id="adModalClose" aria-label="关闭">×</button>
       <div class="modal-body">
-        <h2>解锁完整版</h2>
-        <div class="price">¥9.9 <small>/ 永久使用</small></div>
-        <img src="./wechat-pay.jpg" alt="微信收款码" class="qr-img">
-        <p class="modal-tip">支付 9.9 元后，请输入微信昵称/备注用于解锁</p>
-        <ul class="modal-features">
-          <li>无限次生成内容</li>
-          <li>20 个爆款标题</li>
-          <li>10 个封面文案</li>
-          <li>3 种内容结构模板</li>
-          <li>1 篇完整可发布笔记</li>
-        </ul>
-        <input type="text" class="modal-input" id="payNickname" placeholder="请输入微信昵称或支付备注" maxlength="30">
-        <button class="btn-confirm-pay" id="btnConfirmPay">我已支付，解锁</button>
+        <h2>观看广告解锁</h2>
+        <p class="ad-desc" id="adDesc">
+          模拟激励视频广告<br>
+          观看完成后解锁 <strong>12小时</strong> 无限使用<br>
+          <small>未来微信小程序版本将接入真实广告</small>
+        </p>
+        <div class="ad-countdown" id="adCountdown"></div>
+        <div class="ad-done" id="adDone">✓ 广告观看完成</div>
+        <button class="btn-watch-ad" id="btnWatchAd">开始观看广告</button>
       </div>
-    </div>
-  </div>
-
-  <!-- 解锁成功 -->
-  <div class="success-overlay" id="successOverlay">
-    <div class="success-card">
-      <div class="success-icon">🎉</div>
-      <h2>解锁成功！</h2>
-      <p>感谢你的支持 ❤️<br>完整版已激活，现在可以无限生成全部内容了</p>
-      <button class="btn-success-ok" id="btnSuccessOk">开始创作</button>
     </div>
   </div>
 
   <div class="toast" id="toast">已复制到剪贴板 ✓</div>
 
   <script>
-    /* ===== 付费解锁系统 ===== */
-    const STORAGE = {
-      isPro: 'xhs_isPro',
-      useCount: 'xhs_useCount',
-      useDate: 'xhs_useDate',
-      unlockName: 'xhs_unlockName'
+    /* ============================================================
+     * 模块一：本地存储模块
+     * 统一管理 localStorage 读写，便于迁移微信小程序时替换
+     * ============================================================ */
+    const StorageModule = {
+      KEYS: {
+        rewardExpireTime: 'xhs_rewardExpireTime',
+        useCount: 'xhs_useCount',
+        useDate: 'xhs_useDate'
+      },
+
+      get(key) {
+        return localStorage.getItem(key);
+      },
+
+      set(key, value) {
+        localStorage.setItem(key, String(value));
+      },
+
+      getToday() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      },
+
+      getRewardExpireTime() {
+        return parseInt(this.get(this.KEYS.rewardExpireTime) || '0', 10);
+      },
+
+      setRewardExpireTime(timestamp) {
+        this.set(this.KEYS.rewardExpireTime, timestamp);
+      }
     };
+
+    const UNLIMITED_HOURS = 12;
+    let statusTimer = null;
+
+    /**
+     * 判断是否在 12 小时无限使用期内
+     * @returns {boolean}
+     */
+    function hasUnlimitedAccess() {
+      return Date.now() < StorageModule.getRewardExpireTime();
+    }
+
+    /** 获取无限使用剩余时间（小时、分钟） */
+    function getRemainingUnlimitedTime() {
+      const ms = StorageModule.getRewardExpireTime() - Date.now();
+      if (ms <= 0) return { hours: 0, minutes: 0 };
+      return {
+        hours: Math.floor(ms / 3600000),
+        minutes: Math.floor((ms % 3600000) / 60000)
+      };
+    }
+
+    /** 统一刷新页面状态提示（免费剩余 / 无限剩余） */
+    function updateStatusUI() {
+      const tip = document.getElementById('usageTip');
+      const btnAd = document.getElementById('btnAdUnlock');
+      const badge = document.getElementById('rewardBadge');
+
+      if (hasUnlimitedAccess()) {
+        const { hours, minutes } = getRemainingUnlimitedTime();
+        tip.innerHTML = `🎉 已解锁无限使用，剩余：<strong>${hours}</strong>小时<strong>${minutes}</strong>分钟`;
+        badge.classList.add('show');
+        btnAd.classList.add('hidden');
+      } else {
+        badge.classList.remove('show');
+        const remaining = FreeLimitModule.remaining();
+        if (remaining > 0) {
+          tip.innerHTML = `今日免费剩余：<strong>${remaining}</strong>次`;
+          btnAd.classList.add('hidden');
+        } else {
+          tip.innerHTML = '今日免费次数已用完，<strong>观看广告</strong>解锁12小时无限使用';
+          btnAd.classList.remove('hidden');
+        }
+      }
+
+      const unlimited = hasUnlimitedAccess();
+      document.getElementById('tagTemplates').textContent = unlimited ? '3种' : '需观看广告';
+      document.getElementById('tagNote').textContent = unlimited ? '可直接发布' : '需观看广告';
+      document.getElementById('tagTitles').textContent = unlimited ? '20条' : '5条';
+      document.getElementById('tagCovers').textContent = unlimited ? '10条' : '3条';
+    }
+
+    /** 启动状态倒计时刷新（每 30 秒更新剩余时间） */
+    function startStatusTimer() {
+      if (statusTimer) clearInterval(statusTimer);
+      statusTimer = setInterval(() => {
+        const expire = StorageModule.getRewardExpireTime();
+        if (expire > 0 && Date.now() >= expire) {
+          StorageModule.setRewardExpireTime(0);
+          updateStatusUI();
+          AdManager.applyLockState(false);
+          if (AdManager.lastFullContent) AdManager.refreshDisplay();
+        } else if (hasUnlimitedAccess()) {
+          updateStatusUI();
+        }
+      }, 30000);
+    }
+
+    /* ============================================================
+     * 模块二：免费次数模块
+     * 每日免费生成 3 次；无限使用期内不扣减次数
+     * ============================================================ */
     const FREE_LIMIT = 3;
     const FREE_TITLES = 5;
     const FREE_COVERS = 3;
 
-    function getToday() {
-      const d = new Date();
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    const ProManager = {
-      state: { isPro: false, useCount: 0, unlockName: '' },
+    const FreeLimitModule = {
+      state: { useCount: 0 },
 
       init() {
-        const today = getToday();
-        let useCount = parseInt(localStorage.getItem(STORAGE.useCount) || '0', 10);
-        const savedDate = localStorage.getItem(STORAGE.useDate) || '';
+        const today = StorageModule.getToday();
+        let useCount = parseInt(StorageModule.get(StorageModule.KEYS.useCount) || '0', 10);
+        const savedDate = StorageModule.get(StorageModule.KEYS.useDate) || '';
 
         if (savedDate !== today) {
           useCount = 0;
-          localStorage.setItem(STORAGE.useDate, today);
-          localStorage.setItem(STORAGE.useCount, '0');
+          StorageModule.set(StorageModule.KEYS.useDate, today);
+          StorageModule.set(StorageModule.KEYS.useCount, '0');
         }
-
-        this.state = {
-          isPro: localStorage.getItem(STORAGE.isPro) === 'true',
-          useCount,
-          unlockName: localStorage.getItem(STORAGE.unlockName) || ''
-        };
+        this.state.useCount = useCount;
         this.updateUI();
       },
 
       canGenerate() {
-        return this.state.isPro || this.state.useCount < FREE_LIMIT;
+        if (hasUnlimitedAccess()) return true;
+        return this.state.useCount < FREE_LIMIT;
       },
 
       remaining() {
-        if (this.state.isPro) return Infinity;
         return Math.max(0, FREE_LIMIT - this.state.useCount);
       },
 
       incrementUse() {
-        if (this.state.isPro) return;
+        if (hasUnlimitedAccess()) return;
         this.state.useCount++;
-        localStorage.setItem(STORAGE.useCount, String(this.state.useCount));
-        this.updateUI();
-      },
-
-      unlock(nickname) {
-        this.state.isPro = true;
-        this.state.unlockName = nickname;
-        localStorage.setItem(STORAGE.isPro, 'true');
-        localStorage.setItem(STORAGE.unlockName, nickname);
-        this.updateUI();
+        StorageModule.set(StorageModule.KEYS.useCount, this.state.useCount);
+        updateStatusUI();
       },
 
       updateUI() {
-        const { isPro } = this.state;
-        const remaining = this.remaining();
-
-        document.getElementById('proBadge').classList.toggle('show', isPro);
-        document.getElementById('btnUnlock').classList.toggle('hidden', isPro);
-
-        const tip = document.getElementById('usageTip');
-        if (isPro) {
-          tip.innerHTML = '👑 <strong>完整版</strong>已激活，无限次生成';
-        } else if (remaining > 0) {
-          tip.innerHTML = `免费版每日限<strong>3</strong>次，今日剩余 <strong>${remaining}</strong> 次 · 解锁后无限使用`;
-        } else {
-          tip.innerHTML = '今日免费次数已用完，<strong>解锁完整版</strong>继续生成';
-        }
-
-        document.getElementById('tagTemplates').textContent = isPro ? '3种' : '需解锁';
-        document.getElementById('tagNote').textContent = isPro ? '可直接发布' : '需解锁';
-        document.getElementById('tagTitles').textContent = isPro ? '20条' : '5条';
-        document.getElementById('tagCovers').textContent = isPro ? '10条' : '3条';
+        updateStatusUI();
       }
     };
 
-    function openPayModal() {
-      document.getElementById('payModal').classList.add('show');
-      document.getElementById('payNickname').focus();
+    /* ============================================================
+     * 模块三：广告管理模块
+     * 广告观看成功后授予 12 小时无限使用权限
+     * showRewardAd() 为未来接入微信激励视频广告的统一入口
+     * ============================================================ */
+    const AdManager = {
+      lastFullContent: null,
+
+      init() {
+        this.applyLockState(hasUnlimitedAccess());
+        updateStatusUI();
+        startStatusTimer();
+      },
+
+      /** 授予 12 小时无限使用权限 */
+      grantUnlimitedAccess() {
+        const expireTime = Date.now() + UNLIMITED_HOURS * 60 * 60 * 1000;
+        StorageModule.setRewardExpireTime(expireTime);
+        updateStatusUI();
+        this.applyLockState(true);
+        if (this.lastFullContent) this.refreshDisplay();
+      },
+
+      applyLockState(unlimited) {
+        const lockT = document.getElementById('lockTemplates');
+        const lockN = document.getElementById('lockNote');
+        const contentT = document.getElementById('templatesContent');
+        const contentN = document.getElementById('noteContent');
+
+        lockT.style.display = unlimited ? 'none' : 'flex';
+        lockN.style.display = unlimited ? 'none' : 'flex';
+        contentT.classList.toggle('locked-preview', !unlimited);
+        contentN.classList.toggle('locked-preview', !unlimited);
+        document.getElementById('copyTemplates').style.display = unlimited ? '' : 'none';
+        document.getElementById('copyNote').style.display = unlimited ? '' : 'none';
+      },
+
+      limitTitles(text, count) {
+        const lines = text.split('\n').filter(l => l.trim());
+        const limited = lines.slice(0, count);
+        const rest = lines.length - count;
+        let result = limited.join('\n');
+        if (rest > 0) result += `\n\n🔒 还有 ${rest} 条标题，观看广告解锁12小时无限使用`;
+        return result;
+      },
+
+      limitCovers(text, count) {
+        const blocks = text.split('\n\n').filter(b => b.trim());
+        const limited = blocks.slice(0, count);
+        const rest = blocks.length - count;
+        let result = limited.join('\n\n');
+        if (rest > 0) result += `\n\n🔒 还有 ${rest} 条封面文案，观看广告解锁12小时无限使用`;
+        return result;
+      },
+
+      cacheFullContent(data) {
+        this.lastFullContent = data;
+      },
+
+      refreshDisplay() {
+        const c = this.lastFullContent;
+        if (!c) return;
+        const unlimited = hasUnlimitedAccess();
+        const titlesText = unlimited ? c.titlesFull : this.limitTitles(c.titlesFull, FREE_TITLES);
+        const coversText = unlimited ? c.coversFull : this.limitCovers(c.coversFull, FREE_COVERS);
+
+        document.getElementById('titlesContent').innerHTML = renderTitles(titlesText);
+        document.getElementById('coversContent').innerHTML = renderCovers(coversText);
+        document.getElementById('titlesContent').dataset.plain = titlesText;
+        document.getElementById('coversContent').dataset.plain = coversText;
+        this.applyLockState(unlimited);
+        updateStatusUI();
+      },
+
+      openAdModal() {
+        const modal = document.getElementById('adModal');
+        document.getElementById('adDesc').style.display = '';
+        document.getElementById('adCountdown').classList.remove('show');
+        document.getElementById('adCountdown').textContent = '';
+        document.getElementById('adDone').classList.remove('show');
+        document.getElementById('btnWatchAd').style.display = '';
+        document.getElementById('btnWatchAd').disabled = false;
+        document.getElementById('btnWatchAd').textContent = '开始观看广告';
+        modal.classList.add('show');
+      },
+
+      closeAdModal() {
+        document.getElementById('adModal').classList.remove('show');
+      }
+    };
+
+    /**
+     * 激励视频广告统一入口
+     * 未来迁移微信小程序时，只需替换此函数内部实现：
+     * wx.createRewardedVideoAd({ adUnitId: '...' })
+     * @returns {Promise<boolean>} 观看完成返回 true，取消/失败返回 false
+     */
+    function showRewardAd() {
+      return new Promise((resolve) => {
+        AdManager.openAdModal();
+
+        const btnWatch = document.getElementById('btnWatchAd');
+        const countdown = document.getElementById('adCountdown');
+        const adDone = document.getElementById('adDone');
+        const adDesc = document.getElementById('adDesc');
+
+        const onWatch = () => {
+          btnWatch.disabled = true;
+          btnWatch.textContent = '广告播放中...';
+          adDesc.style.display = 'none';
+
+          let sec = 3;
+          countdown.classList.add('show');
+          countdown.textContent = sec + '...';
+
+          const timer = setInterval(() => {
+            sec--;
+            if (sec > 0) {
+              countdown.textContent = sec + '...';
+            } else {
+              clearInterval(timer);
+              countdown.classList.remove('show');
+              adDone.classList.add('show');
+              btnWatch.style.display = 'none';
+
+              setTimeout(() => {
+                AdManager.closeAdModal();
+                AdManager.grantUnlimitedAccess();
+                showToast('广告观看成功，已解锁12小时无限使用 🎉');
+                resolve(true);
+                cleanup();
+              }, 1200);
+            }
+          }, 1000);
+        };
+
+        const onClose = () => {
+          AdManager.closeAdModal();
+          resolve(false);
+          cleanup();
+        };
+
+        const cleanup = () => {
+          btnWatch.removeEventListener('click', onWatch);
+          document.getElementById('adModalClose').removeEventListener('click', onClose);
+          document.getElementById('adModal').removeEventListener('click', onOverlayClick);
+        };
+
+        const onOverlayClick = (e) => {
+          if (e.target === document.getElementById('adModal') && !btnWatch.disabled) onClose();
+        };
+
+        btnWatch.addEventListener('click', onWatch);
+        document.getElementById('adModalClose').addEventListener('click', onClose);
+        document.getElementById('adModal').addEventListener('click', onOverlayClick);
+      });
     }
 
-    function closePayModal() {
-      document.getElementById('payModal').classList.remove('show');
-    }
-
-    function showSuccessOverlay() {
-      document.getElementById('successOverlay').classList.add('show');
-    }
-
-    function hideSuccessOverlay() {
-      document.getElementById('successOverlay').classList.remove('show');
-    }
-
-    function applyLockState(isPro) {
-      const lockT = document.getElementById('lockTemplates');
-      const lockN = document.getElementById('lockNote');
-      const contentT = document.getElementById('templatesContent');
-      const contentN = document.getElementById('noteContent');
-
-      lockT.style.display = isPro ? 'none' : 'flex';
-      lockN.style.display = isPro ? 'none' : 'flex';
-      contentT.classList.toggle('locked-preview', !isPro);
-      contentN.classList.toggle('locked-preview', !isPro);
-
-      document.getElementById('copyTemplates').style.display = isPro ? '' : 'none';
-      document.getElementById('copyNote').style.display = isPro ? '' : 'none';
-    }
-
-    function limitTitles(text, count) {
-      const lines = text.split('\n').filter(l => l.trim());
-      const limited = lines.slice(0, count);
-      const rest = lines.length - count;
-      let result = limited.join('\n');
-      if (rest > 0) result += `\n\n🔒 还有 ${rest} 条标题，解锁完整版查看全部 20 条`;
-      return result;
-    }
-
-    function limitCovers(text, count) {
-      const blocks = text.split('\n\n').filter(b => b.trim());
-      const limited = blocks.slice(0, count);
-      const rest = blocks.length - count;
-      let result = limited.join('\n\n');
-      if (rest > 0) result += `\n\n🔒 还有 ${rest} 条封面文案，解锁完整版查看全部 10 条`;
-      return result;
-    }
-
-    /* ===== 内容生成 ===== */
+    /* ============================================================
+     * 模块四：内容生成模块
+     * 标题 / 封面 / 结构模板 / 完整笔记生成逻辑
+     * ============================================================ */
     const AUDIENCE_CTX = {
       '学生': { call: '姐妹们', pain: '生活费紧巴巴', wish: '想边上学边攒点零花钱', scene: '宿舍/图书馆' },
       '宝妈': { call: '宝妈们', pain: '带娃忙得脚不沾地', wish: '在家也能有点自己的收入', scene: '娃睡了以后' },
@@ -1136,6 +1214,9 @@ ${g.emoji} 觉得有用先收藏，回头用得上`;
       }, 2000);
     }
 
+    /* ============================================================
+     * 应用入口：事件绑定与初始化
+     * ============================================================ */
     document.getElementById('btnGenerate').addEventListener('click', () => {
       const topic = document.getElementById('topic').value.trim();
       if (!topic) {
@@ -1144,23 +1225,25 @@ ${g.emoji} 觉得有用先收藏，回头用得上`;
         return;
       }
 
-      if (!ProManager.canGenerate()) {
-        showToast('今日免费次数已用完，请解锁完整版');
-        openPayModal();
+      if (!FreeLimitModule.canGenerate()) {
+        showToast('今日免费次数已用完，观看广告解锁12小时无限使用');
+        document.getElementById('btnAdUnlock').classList.remove('hidden');
         return;
       }
 
       const audience = document.getElementById('audience').value;
       const goal = document.getElementById('goal').value;
-      const isPro = ProManager.state.isPro;
+      const unlimited = hasUnlimitedAccess();
 
       const titlesFull = generateTitles(topic, audience, goal);
       const coversFull = generateCovers(topic, audience, goal);
       const templates = generateTemplates(topic, audience, goal);
       const note = generateNote(topic, audience, goal);
 
-      const titlesText = isPro ? titlesFull : limitTitles(titlesFull, FREE_TITLES);
-      const coversText = isPro ? coversFull : limitCovers(coversFull, FREE_COVERS);
+      AdManager.cacheFullContent({ titlesFull, coversFull, templates, note });
+
+      const titlesText = unlimited ? titlesFull : AdManager.limitTitles(titlesFull, FREE_TITLES);
+      const coversText = unlimited ? coversFull : AdManager.limitCovers(coversFull, FREE_COVERS);
 
       document.getElementById('titlesContent').innerHTML = renderTitles(titlesText);
       document.getElementById('coversContent').innerHTML = renderCovers(coversText);
@@ -1172,8 +1255,8 @@ ${g.emoji} 觉得有用先收藏，回头用得上`;
       document.getElementById('templatesContent').dataset.plain = templates.join('\n\n---\n\n');
       document.getElementById('noteContent').dataset.plain = `${note.title}\n\n${note.body}\n\n${note.tags}`;
 
-      applyLockState(isPro);
-      ProManager.incrementUse();
+      AdManager.applyLockState(unlimited);
+      FreeLimitModule.incrementUse();
 
       document.getElementById('outputSection').classList.add('visible');
 
@@ -1184,8 +1267,8 @@ ${g.emoji} 觉得有用先收藏，回头用得上`;
 
     document.querySelectorAll('.btn-copy').forEach(btn => {
       btn.addEventListener('click', () => {
-        if (!ProManager.state.isPro && (btn.id === 'copyTemplates' || btn.id === 'copyNote')) {
-          openPayModal();
+        if (!hasUnlimitedAccess() && (btn.id === 'copyTemplates' || btn.id === 'copyNote')) {
+          showRewardAd();
           return;
         }
         const targetId = btn.dataset.target;
@@ -1199,40 +1282,13 @@ ${g.emoji} 觉得有用先收藏，回头用得上`;
       if (e.key === 'Enter') document.getElementById('btnGenerate').click();
     });
 
-    /* ===== 付费交互 ===== */
-    document.getElementById('btnUnlock').addEventListener('click', openPayModal);
-    document.getElementById('modalClose').addEventListener('click', closePayModal);
-    document.getElementById('payModal').addEventListener('click', e => {
-      if (e.target === document.getElementById('payModal')) closePayModal();
-    });
-
+    document.getElementById('btnAdUnlock').addEventListener('click', () => showRewardAd());
     document.querySelectorAll('.unlock-inline').forEach(btn => {
-      btn.addEventListener('click', openPayModal);
+      btn.addEventListener('click', () => showRewardAd());
     });
 
-    document.getElementById('btnConfirmPay').addEventListener('click', () => {
-      const nickname = document.getElementById('payNickname').value.trim();
-      if (!nickname) {
-        showToast('请输入微信昵称或支付备注');
-        document.getElementById('payNickname').focus();
-        return;
-      }
-      ProManager.unlock(nickname);
-      closePayModal();
-      showSuccessOverlay();
-      applyLockState(true);
-      document.getElementById('tagTemplates').textContent = '3种';
-      document.getElementById('tagNote').textContent = '可直接发布';
-      document.getElementById('tagTitles').textContent = '20条';
-      document.getElementById('tagCovers').textContent = '10条';
-    });
-
-    document.getElementById('btnSuccessOk').addEventListener('click', () => {
-      hideSuccessOverlay();
-      document.getElementById('topic').focus();
-    });
-
-    ProManager.init();
+    FreeLimitModule.init();
+    AdManager.init();
   </script>
 </body>
 </html>
