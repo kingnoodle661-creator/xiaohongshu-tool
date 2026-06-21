@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>小红书爆款内容生成器</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red: #ff2442;
+      --red-light: #fff0f3;
+      --red-dark: #e01e3a;
+      --bg: #fafafa;
+      --card: #ffffff;
+      --text: #1a1a1a;
+      --text-secondary: #666;
+      --border: #eee;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,.06);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .header {
+      background: linear-gradient(135deg, var(--red) 0%, #ff6b81 100%);
+      color: #fff;
+      padding: 28px 20px 36px;
+      text-align: center;
+    }
+
+    .header h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+    }
+
+    .header p {
+      font-size: .82rem;
+      opacity: .88;
+      margin-top: 6px;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: -18px auto 0;
+      padding: 0 16px 32px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+
+    .card-title {
+      font-size: .95rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .card-title .dot {
+      width: 4px;
+      height: 16px;
+      background: var(--red);
+      border-radius: 2px;
+    }
+
+    .form-group {
+      margin-bottom: 14px;
+    }
+
+    .form-group:last-of-type { margin-bottom: 0; }
+
+    label {
+      display: block;
+      font-size: .82rem;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: .95rem;
+      font-family: inherit;
+      background: #fff;
+      transition: border-color .2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    input[type="text"]:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--red);
+    }
+
+    .btn-generate {
+      width: 100%;
+      padding: 14px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background .2s, transform .1s;
+      letter-spacing: 1px;
+    }
+
+    .btn-generate:active {
+      transform: scale(.98);
+      background: var(--red-dark);
+    }
+
+    .output-section { display: none; }
+    .output-section.visible { display: block; }
+
+    .output-block {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+      overflow: hidden;
+    }
+
+    .output-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      background: #fefefe;
+    }
+
+    .output-header h3 {
+      font-size: .9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .output-header .tag {
+      font-size: .68rem;
+      background: var(--red-light);
+      color: var(--red);
+      padding: 2px 8px;
+      border-radius: 20px;
+      font-weight: 500;
+    }
+
+    .btn-copy {
+      padding: 6px 14px;
+      background: #fff;
+      border: 1.5px solid var(--red);
+      color: var(--red);
+      border-radius: 20px;
+      font-size: .75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .2s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .btn-copy:active,
+    .btn-copy.copied {
+      background: var(--red);
+      color: #fff;
+    }
+
+    .output-body {
+      padding: 16px;
+      font-size: .88rem;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .output-body .item {
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+    }
+
+    .output-body .item:last-child { border-bottom: none; }
+
+    .output-body .item-num {
+      color: var(--red);
+      font-weight: 600;
+      margin-right: 4px;
+    }
+
+    .template-block {
+      margin-bottom: 16px;
+      padding: 14px;
+      background: #fafafa;
+      border-radius: 10px;
+      border-left: 3px solid var(--red);
+    }
+
+    .template-block:last-child { margin-bottom: 0; }
+
+    .template-block h4 {
+      font-size: .85rem;
+      color: var(--red);
+      margin-bottom: 8px;
+    }
+
+    .note-body { font-size: .88rem; line-height: 1.85; }
+
+    .note-body .note-title {
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+
+    .note-body .note-tags {
+      margin-top: 14px;
+      color: var(--red);
+      font-size: .82rem;
+    }
+
+    .footer-hint {
+      text-align: center;
+      font-size: .85rem;
+      color: var(--text-secondary);
+      padding: 20px 16px 28px;
+      margin-top: 8px;
+    }
+
+    .footer-hint span {
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+
+    .usage-tip {
+      font-size: .78rem;
+      color: var(--text-secondary);
+      background: #f5f5f5;
+      padding: 8px 12px;
+      border-radius: 8px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .usage-tip strong { color: var(--red); }
+
+    .header .reward-badge {
+      display: none;
+      margin-top: 10px;
+      font-size: .72rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: #fff;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 700;
+    }
+
+    .header .reward-badge.show { display: inline-block; }
+
+    .btn-ad-unlock {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 14px;
+      box-shadow: 0 4px 14px rgba(102, 126, 234, .35);
+      animation: pulse-btn 2.5s ease-in-out infinite;
+      letter-spacing: .5px;
+    }
+
+    .btn-ad-unlock:active { transform: scale(.98); }
+    .btn-ad-unlock.hidden { display: none; }
+
+    @keyframes pulse-btn {
+      0%, 100% { box-shadow: 0 4px 14px rgba(255, 36, 66, .35); }
+      50% { box-shadow: 0 4px 22px rgba(255, 36, 66, .55); }
+    }
+
+    .locked-block {
+      position: relative;
+      min-height: 120px;
+    }
+
+    .locked-block .lock-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,.88);
+      backdrop-filter: blur(4px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px;
+      text-align: center;
+      z-index: 2;
+    }
+
+    .locked-block .lock-overlay p {
+      font-size: .82rem;
+      color: var(--text-secondary);
+    }
+
+    .locked-block .lock-overlay button {
+      padding: 8px 20px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: .8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .locked-preview {
+      filter: blur(3px);
+      user-select: none;
+      pointer-events: none;
+      opacity: .6;
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 360px;
+      max-height: 90vh;
+      overflow-y: auto;
+      position: relative;
+      animation: modal-in .3s ease;
+    }
+
+    @keyframes modal-in {
+      from { opacity: 0; transform: translateY(20px) scale(.96); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      width: 28px;
+      height: 28px;
+      border: none;
+      background: #f0f0f0;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      cursor: pointer;
+      color: #666;
+      line-height: 1;
+      z-index: 1;
+    }
+
+    .modal-body {
+      padding: 28px 22px 22px;
+      text-align: center;
+    }
+
+    .modal-body h2 {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+    }
+
+    .modal-body .ad-desc {
+      font-size: .85rem;
+      color: var(--text-secondary);
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .modal-body .ad-desc small {
+      display: block;
+      margin-top: 8px;
+      font-size: .75rem;
+      color: #999;
+    }
+
+    .ad-countdown {
+      display: none;
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--red);
+      margin: 24px 0;
+      animation: count-pop .4s ease;
+    }
+
+    .ad-countdown.show { display: block; }
+
+    @keyframes count-pop {
+      from { transform: scale(.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .ad-done {
+      display: none;
+      font-size: 1rem;
+      color: #2ecc71;
+      font-weight: 700;
+      margin: 20px 0;
+    }
+
+    .ad-done.show { display: block; }
+
+    .btn-watch-ad {
+      width: 100%;
+      padding: 13px;
+      background: var(--red);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: .95rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-watch-ad:active { background: var(--red-dark); }
+    .btn-watch-ad:disabled { opacity: .5; cursor: not-allowed; }
+
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(0,0,0,.78);
+      color: #fff;
+      padding: 10px 24px;
+      border-radius: 24px;
+      font-size: .82rem;
+      opacity: 0;
+      transition: all .3s;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 380px) {
+      .header h1 { font-size: 1.2rem; }
+      .output-header { flex-wrap: wrap; gap: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>📕 小红书爆款内容生成器</h1>
+    <p>输入主题，一键出标题、封面、结构、完整笔记</p>
+    <span class="reward-badge" id="rewardBadge">🎉 无限使用中</span>
+  </div>
+
+  <div class="container">
+    <div class="status-bar">
+      <div class="usage-tip" id="usageTip">今日免费剩余：<strong>3</strong>次</div>
+    </div>
+
+    <button class="btn-ad-unlock hidden" id="btnAdUnlock">🎥 观看广告解锁12小时无限使用</button>
+
+    <div class="card">
+      <div class="card-title"><span class="dot"></span>创作设置</div>
+
+      <div class="form-group">
+        <label for="topic">主题</label>
+        <input type="text" id="topic" placeholder="例如：平价护肤、考研备考、宝宝辅食..." maxlength="50">
+      </div>
+
+      <div class="form-group">
+        <label for="audience">目标人群</label>
+        <select id="audience">
+          <option value="学生">学生</option>
+          <option value="宝妈">宝妈</option>
+          <option value="打工人">打工人</option>
+          <option value="副业党">副业党</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="goal">内容目标</label>
+        <select id="goal">
+          <option value="涨粉">涨粉</option>
+          <option value="带货">带货</option>
+          <option value="引流">引流</option>
+        </select>
+      </div>
+
+      <button class="btn-generate" id="btnGenerate">✨ 一键生成</button>
+    </div>
+
+    <div class="output-section" id="outputSection">
+      <div class="output-block" id="blockTitles">
+        <div class="output-header">
+          <h3>爆款标题 <span class="tag" id="tagTitles">20条</span></h3>
+          <button class="btn-copy" data-target="titlesContent">复制</button>
+        </div>
+        <div class="output-body" id="titlesContent"></div>
+      </div>
+
+      <div class="output-block" id="blockCovers">
+        <div class="output-header">
+          <h3>封面文案 <span class="tag" id="tagCovers">10条</span></h3>
+          <button class="btn-copy" data-target="coversContent">复制</button>
+        </div>
+        <div class="output-body" id="coversContent"></div>
+      </div>
+
+      <div class="output-block" id="blockTemplates">
+        <div class="output-header">
+          <h3>内容结构模板 <span class="tag" id="tagTemplates">3种</span></h3>
+          <button class="btn-copy" data-target="templatesContent" id="copyTemplates">复制</button>
+        </div>
+        <div class="output-body locked-block" id="templatesWrap">
+          <div id="templatesContent"></div>
+          <div class="lock-overlay" id="lockTemplates" style="display:none">
+            <p>🔒 观看广告解锁12小时无限使用</p>
+            <button type="button" class="unlock-inline">观看广告</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="output-block" id="blockNote">
+        <div class="output-header">
+          <h3>完整笔记 <span class="tag" id="tagNote">可直接发布</span></h3>
+          <button class="btn-copy" data-target="noteContent" id="copyNote">复制</button>
+        </div>
+        <div class="output-body note-body locked-block" id="noteWrap">
+          <div id="noteContent"></div>
+          <div class="lock-overlay" id="lockNote" style="display:none">
+            <p>🔒 观看广告解锁12小时无限使用</p>
+            <button type="button" class="unlock-inline">观看广告</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-hint" id="footerHint">👉 <span>复制即可直接发布小红书</span></div>
+  </div>
+
+  <!-- 模拟广告弹窗 -->
+  <div class="modal-overlay" id="adModal">
+    <div class="modal">
+      <button class="modal-close" id="adModalClose" aria-label="关闭">×</button>
+      <div class="modal-body">
+        <h2>观看广告解锁</h2>
+        <p class="ad-desc" id="adDesc">
+          模拟激励视频广告<br>
+          观看完成后解锁 <strong>12小时</strong> 无限使用<br>
+          <small>未来微信小程序版本将接入真实广告</small>
+        </p>
+        <div class="ad-countdown" id="adCountdown"></div>
+        <div class="ad-done" id="adDone">✓ 广告观看完成</div>
+        <button class="btn-watch-ad" id="btnWatchAd">开始观看广告</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">已复制到剪贴板 ✓</div>
+
+  <script>
+    /* ============================================================
+     * 模块一：本地存储模块
+     * 统一管理 localStorage 读写，便于迁移微信小程序时替换
+     * ============================================================ */
+    const StorageModule = {
+      KEYS: {
+        rewardExpireTime: 'xhs_rewardExpireTime',
+        useCount: 'xhs_useCount',
+        useDate: 'xhs_useDate'
+      },
+
+      get(key) {
+        return localStorage.getItem(key);
+      },
+
+      set(key, value) {
+        localStorage.setItem(key, String(value));
+      },
+
+      getToday() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      },
+
+      getRewardExpireTime() {
+        return parseInt(this.get(this.KEYS.rewardExpireTime) || '0', 10);
+      },
+
+      setRewardExpireTime(timestamp) {
+        this.set(this.KEYS.rewardExpireTime, timestamp);
+      }
+    };
+
+    const UNLIMITED_HOURS = 12;
+    let statusTimer = null;
+
+    /**
+     * 判断是否在 12 小时无限使用期内
+     * @returns {boolean}
+     */
+    function hasUnlimitedAccess() {
+      return Date.now() < StorageModule.getRewardExpireTime();
+    }
+
+    /** 获取无限使用剩余时间（小时、分钟） */
+    function getRemainingUnlimitedTime() {
+      const ms = StorageModule.getRewardExpireTime() - Date.now();
+      if (ms <= 0) return { hours: 0, minutes: 0 };
+      return {
+        hours: Math.floor(ms / 3600000),
+        minutes: Math.floor((ms % 3600000) / 60000)
+      };
+    }
+
+    /** 统一刷新页面状态提示（免费剩余 / 无限剩余） */
+    function updateStatusUI() {
+      const tip = document.getElementById('usageTip');
+      const btnAd = document.getElementById('btnAdUnlock');
+      const badge = document.getElementById('rewardBadge');
+
+      if (hasUnlimitedAccess()) {
+        const { hours, minutes } = getRemainingUnlimitedTime();
+        tip.innerHTML = `🎉 已解锁无限使用，剩余：<strong>${hours}</strong>小时<strong>${minutes}</strong>分钟`;
+        badge.classList.add('show');
+        btnAd.classList.add('hidden');
+      } else {
+        badge.classList.remove('show');
+        const remaining = FreeLimitModule.remaining();
+        if (remaining > 0) {
+          tip.innerHTML = `今日免费剩余：<strong>${remaining}</strong>次`;
+          btnAd.classList.add('hidden');
+        } else {
+          tip.innerHTML = '今日免费次数已用完，<strong>观看广告</strong>解锁12小时无限使用';
+          btnAd.classList.remove('hidden');
+        }
+      }
+
+      const unlimited = hasUnlimitedAccess();
+      document.getElementById('tagTemplates').textContent = unlimited ? '3种' : '需观看广告';
+      document.getElementById('tagNote').textContent = unlimited ? '可直接发布' : '需观看广告';
+      document.getElementById('tagTitles').textContent = unlimited ? '20条' : '5条';
+      document.getElementById('tagCovers').textContent = unlimited ? '10条' : '3条';
+    }
+
+    /** 启动状态倒计时刷新（每 30 秒更新剩余时间） */
+    function startStatusTimer() {
+      if (statusTimer) clearInterval(statusTimer);
+      statusTimer = setInterval(() => {
+        const expire = StorageModule.getRewardExpireTime();
+        if (expire > 0 && Date.now() >= expire) {
+          StorageModule.setRewardExpireTime(0);
+          updateStatusUI();
+          AdManager.applyLockState(false);
+          if (AdManager.lastFullContent) AdManager.refreshDisplay();
+        } else if (hasUnlimitedAccess()) {
+          updateStatusUI();
+        }
+      }, 30000);
+    }
+
+    /* ============================================================
+     * 模块二：免费次数模块
+     * 每日免费生成 3 次；无限使用期内不扣减次数
+     * ============================================================ */
+    const FREE_LIMIT = 3;
+    const FREE_TITLES = 5;
+    const FREE_COVERS = 3;
+
+    const FreeLimitModule = {
+      state: { useCount: 0 },
+
+      init() {
+        const today = StorageModule.getToday();
+        let useCount = parseInt(StorageModule.get(StorageModule.KEYS.useCount) || '0', 10);
+        const savedDate = StorageModule.get(StorageModule.KEYS.useDate) || '';
+
+        if (savedDate !== today) {
+          useCount = 0;
+          StorageModule.set(StorageModule.KEYS.useDate, today);
+          StorageModule.set(StorageModule.KEYS.useCount, '0');
+        }
+        this.state.useCount = useCount;
+        this.updateUI();
+      },
+
+      canGenerate() {
+        if (hasUnlimitedAccess()) return true;
+        return this.state.useCount < FREE_LIMIT;
+      },
+
+      remaining() {
+        return Math.max(0, FREE_LIMIT - this.state.useCount);
+      },
+
+      incrementUse() {
+        if (hasUnlimitedAccess()) return;
+        this.state.useCount++;
+        StorageModule.set(StorageModule.KEYS.useCount, this.state.useCount);
+        updateStatusUI();
+      },
+
+      updateUI() {
+        updateStatusUI();
+      }
+    };
+
+    /* ============================================================
+     * 模块三：广告管理模块
+     * 广告观看成功后授予 12 小时无限使用权限
+     * showRewardAd() 为未来接入微信激励视频广告的统一入口
+     * ============================================================ */
+    const AdManager = {
+      lastFullContent: null,
+
+      init() {
+        this.applyLockState(hasUnlimitedAccess());
+        updateStatusUI();
+        startStatusTimer();
+      },
+
+      /** 授予 12 小时无限使用权限 */
+      grantUnlimitedAccess() {
+        const expireTime = Date.now() + UNLIMITED_HOURS * 60 * 60 * 1000;
+        StorageModule.setRewardExpireTime(expireTime);
+        updateStatusUI();
+        this.applyLockState(true);
+        if (this.lastFullContent) this.refreshDisplay();
+      },
+
+      applyLockState(unlimited) {
+        const lockT = document.getElementById('lockTemplates');
+        const lockN = document.getElementById('lockNote');
+        const contentT = document.getElementById('templatesContent');
+        const contentN = document.getElementById('noteContent');
+
+        lockT.style.display = unlimited ? 'none' : 'flex';
+        lockN.style.display = unlimited ? 'none' : 'flex';
+        contentT.classList.toggle('locked-preview', !unlimited);
+        contentN.classList.toggle('locked-preview', !unlimited);
+        document.getElementById('copyTemplates').style.display = unlimited ? '' : 'none';
+        document.getElementById('copyNote').style.display = unlimited ? '' : 'none';
+      },
+
+      limitTitles(text, count) {
+        const lines = text.split('\n').filter(l => l.trim());
+        const limited = lines.slice(0, count);
+        const rest = lines.length - count;
+        let result = limited.join('\n');
+        if (rest > 0) result += `\n\n🔒 还有 ${rest} 条标题，观看广告解锁12小时无限使用`;
+        return result;
+      },
+
+      limitCovers(text, count) {
+        const blocks = text.split('\n\n').filter(b => b.trim());
+        const limited = blocks.slice(0, count);
+        const rest = blocks.length - count;
+        let result = limited.join('\n\n');
+        if (rest > 0) result += `\n\n🔒 还有 ${rest} 条封面文案，观看广告解锁12小时无限使用`;
+        return result;
+      },
+
+      cacheFullContent(data) {
+        this.lastFullContent = data;
+      },
+
+      refreshDisplay() {
+        const c = this.lastFullContent;
+        if (!c) return;
+        const unlimited = hasUnlimitedAccess();
+        const titlesText = unlimited ? c.titlesFull : this.limitTitles(c.titlesFull, FREE_TITLES);
+        const coversText = unlimited ? c.coversFull : this.limitCovers(c.coversFull, FREE_COVERS);
+
+        document.getElementById('titlesContent').innerHTML = renderTitles(titlesText);
+        document.getElementById('coversContent').innerHTML = renderCovers(coversText);
+        document.getElementById('titlesContent').dataset.plain = titlesText;
+        document.getElementById('coversContent').dataset.plain = coversText;
+        this.applyLockState(unlimited);
+        updateStatusUI();
+      },
+
+      openAdModal() {
+        const modal = document.getElementById('adModal');
+        document.getElementById('adDesc').style.display = '';
+        document.getElementById('adCountdown').classList.remove('show');
+        document.getElementById('adCountdown').textContent = '';
+        document.getElementById('adDone').classList.remove('show');
+        document.getElementById('btnWatchAd').style.display = '';
+        document.getElementById('btnWatchAd').disabled = false;
+        document.getElementById('btnWatchAd').textContent = '开始观看广告';
+        modal.classList.add('show');
+      },
+
+      closeAdModal() {
+        document.getElementById('adModal').classList.remove('show');
+      }
+    };
+
+    /**
+     * 激励视频广告统一入口
+     * 未来迁移微信小程序时，只需替换此函数内部实现：
+     * wx.createRewardedVideoAd({ adUnitId: '...' })
+     * @returns {Promise<boolean>} 观看完成返回 true，取消/失败返回 false
+     */
+    function showRewardAd() {
+      return new Promise((resolve) => {
+        AdManager.openAdModal();
+
+        const btnWatch = document.getElementById('btnWatchAd');
+        const countdown = document.getElementById('adCountdown');
+        const adDone = document.getElementById('adDone');
+        const adDesc = document.getElementById('adDesc');
+
+        const onWatch = () => {
+          btnWatch.disabled = true;
+          btnWatch.textContent = '广告播放中...';
+          adDesc.style.display = 'none';
+
+          let sec = 3;
+          countdown.classList.add('show');
+          countdown.textContent = sec + '...';
+
+          const timer = setInterval(() => {
+            sec--;
+            if (sec > 0) {
+              countdown.textContent = sec + '...';
+            } else {
+              clearInterval(timer);
+              countdown.classList.remove('show');
+              adDone.classList.add('show');
+              btnWatch.style.display = 'none';
+
+              setTimeout(() => {
+                AdManager.closeAdModal();
+                AdManager.grantUnlimitedAccess();
+                showToast('广告观看成功，已解锁12小时无限使用 🎉');
+                resolve(true);
+                cleanup();
+              }, 1200);
+            }
+          }, 1000);
+        };
+
+        const onClose = () => {
+          AdManager.closeAdModal();
+          resolve(false);
+          cleanup();
+        };
+
+        const cleanup = () => {
+          btnWatch.removeEventListener('click', onWatch);
+          document.getElementById('adModalClose').removeEventListener('click', onClose);
+          document.getElementById('adModal').removeEventListener('click', onOverlayClick);
+        };
+
+        const onOverlayClick = (e) => {
+          if (e.target === document.getElementById('adModal') && !btnWatch.disabled) onClose();
+        };
+
+        btnWatch.addEventListener('click', onWatch);
+        document.getElementById('adModalClose').addEventListener('click', onClose);
+        document.getElementById('adModal').addEventListener('click', onOverlayClick);
+      });
+    }
+
+    /* ============================================================
+     * 模块四：内容生成模块
+     * 标题 / 封面 / 结构模板 / 完整笔记生成逻辑
+     * ============================================================ */
+    const AUDIENCE_CTX = {
+      '学生': { call: '姐妹们', pain: '生活费紧巴巴', wish: '想边上学边攒点零花钱', scene: '宿舍/图书馆' },
+      '宝妈': { call: '宝妈们', pain: '带娃忙得脚不沾地', wish: '在家也能有点自己的收入', scene: '娃睡了以后' },
+      '打工人': { call: '打工人们', pain: '工资到手就没', wish: '下班想搞点副业补贴家用', scene: '通勤/午休' },
+      '副业党': { call: '想搞副业的宝子', pain: '试了好多路子都不太顺', wish: '找到一条能长期坚持的', scene: '周末/晚上' }
+    };
+
+    const GOAL_CTX = {
+      '涨粉': {
+        hook: ['涨粉', '出圈', '被更多人看到', '粉丝蹭蹭涨'],
+        result: ['粉丝破千', '单条小爆', '关注的人变多了', '终于有人主动私信了'],
+        action: ['收藏这篇', '关注我持续更新', '点赞让我知道你需要'],
+        adj: ['太绝了', '真的管用', '亲测涨粉', '谁用谁知道'],
+        emoji: '🔥',
+        cta: '觉得有用点个关注，后面继续分享干货'
+      },
+      '带货': {
+        hook: ['好物分享', '真的好用', '回购N次', '闭眼入不踩雷'],
+        result: ['帮姐妹省了好几百', '下单的人反馈都不错', '小爆单了', '佣金到账那一刻真开心'],
+        action: ['链接放评论区了', '需要的姐妹自取', '戳主页看同款'],
+        adj: ['性价比超高', '平价好用', '学生党友好', '宝妈闭眼入'],
+        emoji: '🛒',
+        cta: '想要链接的评论区扣1，我看到就回'
+      },
+      '引流': {
+        hook: ['私信领资料', '评论区扣1', '主页有惊喜', '限时免费领'],
+        result: ['私信爆了', '加到不少精准粉', '群满了又开新群', '引流效果超出预期'],
+        action: ['评论区扣1', '私信发你', '主页置顶自取'],
+        adj: ['限时免费', '手慢无', '仅限前50名', '干货打包发'],
+        emoji: '📩',
+        cta: '想要的评论区扣1，看到就发你'
+      }
+    };
+
+    function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+    function pickN(arr, n) {
+      const copy = [...arr];
+      const result = [];
+      while (result.length < n && copy.length) {
+        const i = Math.floor(Math.random() * copy.length);
+        result.push(copy.splice(i, 1)[0]);
+      }
+      return result;
+    }
+
+    function tagify(topic) {
+      return topic.replace(/\s/g, '');
+    }
+
+    function generateTitles(topic, audience, goal) {
+      const ctx = AUDIENCE_CTX[audience];
+      const g = GOAL_CTX[goal];
+      const formulas = [
+        () => `${pick(['后悔没早', '千万别', '绝了！', '谁懂啊'])}知道${topic}还能${pick(g.hook)}`,
+        () => `${pick(['3个', '5个', '7个'])}${topic}秘诀，第${pick(['2', '3'])}个帮我${pick(g.result)}`,
+        () => `做了${pick(['2个月', '半年'])}${topic}，${audience}说点掏心窝的话`,
+        () => `${ctx.pain}？${topic}这招${pick(g.adj)}（${goal}向）`,
+        () => `${audience}亲测｜${topic}从0开始，我只改了${pick(['3', '4'])}个地方`,
+        () => `关于${topic}，${pick(['90%', '大部分人'])}都搞错了这${pick(['1', '2', '3'])}点`,
+        () => `从${pick(['0粉', '没人看', '完全没流量'])}到${pick(g.result)}，${topic}我做对了啥`,
+        () => `${pick(['24岁', '28岁', '32岁'])}${audience}，靠${topic}${pick(['实现了', '拿到了'])}${pick(g.result)}`,
+        () => `${topic}踩过的${pick(['5', '7'])}个坑，${pick(['第3个', '最后一个'])}差点让我放弃`,
+        () => `劝退！${topic}前先看完这篇，能少交${pick(['一半', '好多'])}学费`,
+        () => `${ctx.scene}搞${topic}？我试了${pick(['3周', '1个月'])}，结果出乎意料`,
+        () => `${pick(['没想到', '反差太大了', '离谱'])}！${topic}和网上说的完全不一样`,
+        () => `${audience}必藏｜${topic}${pick(['保姆级', '超详细'])}攻略（${goal}版）`,
+        () => `为什么你做${topic}没效果？问题可能出在这`,
+        () => `${pick(g.adj)}！${topic}原来可以这么玩`,
+        () => `${topic}｜${pick(['一周', '一个月'])}见效的${pick(['笨办法', '土方子'])}，但真有用`,
+        () => `别再做${topic}了！除非你想${pick(g.result)}`,
+        () => `${ctx.call}！${topic}这件事我必须唠唠`,
+        () => `${pick(['低成本', '零门槛'])}${topic}，${audience}照着做就行`,
+        () => `${topic} vs ${pick(['老方法', '别人教的'])}，差距不是一点半点`,
+        () => `被${topic}改变${pick(['30天', '3个月'])}，我的真实日记`,
+        () => `${pick(['深夜', '周末'])}${topic}，${audience}的${pick(['自救', '逆袭'])}记录`,
+        () => `我妈说我疯了，但${topic}真的帮我${pick(g.result)}`,
+        () => `${topic}新手别慌，按这个顺序来少走${pick(['80%', '90%'])}弯路`,
+        () => `${pick(['月入', '轻松'])}${pick(['1k', '3k', '5k'])}？${topic}${goal}真的行`
+      ];
+
+      return pickN(formulas, 20).map((fn, i) => `${i + 1}. ${fn()}`).join('\n');
+    }
+
+    function generateCovers(topic, audience, goal) {
+      const ctx = AUDIENCE_CTX[audience];
+      const g = GOAL_CTX[goal];
+      const covers = [
+        `${topic}\n${pick(g.adj)}`,
+        `${audience}必看\n${goal}攻略`,
+        `${pick(['3步', '5招', '7天'])}\n搞定${topic}`,
+        `${ctx.pain}？\n看这篇`,
+        `${pick(g.hook)}\n${topic}`,
+        `别踩坑！\n${topic}`,
+        `从0开始\n${topic}`,
+        `大实话\n${topic}日记`,
+        `收藏！\n${topic}干货`,
+        `${topic}\n一篇够用`,
+        `${goal}必学\n${topic}`,
+        `${audience}专属\n${topic}`,
+        `后悔没早\n知道这些`,
+        `${topic}\n${pick(['避坑', '复盘'])}`,
+        `谁懂啊\n太难了`,
+        `${pick(g.adj)}\n闭眼入`,
+        `限时领\n${topic}资料`,
+        `真香警告\n${topic}`,
+        `${pick(['月入', '轻松'])}${pick(['1k', '3k'])}？\n看这里`,
+        `评论区扣1\n领${topic}`
+      ];
+
+      return pickN(covers, 10).map((c, i) => `${i + 1}. ${c}`).join('\n\n');
+    }
+
+    function generateTemplates(topic, audience, goal) {
+      const ctx = AUDIENCE_CTX[audience];
+      const g = GOAL_CTX[goal];
+      const tag = tagify(topic);
+
+      const pitfall = `【踩坑型】${topic}（${goal}）
+
+开头：
+先说结论——${topic}我踩坑踩麻了，这篇专门给${audience}看的，能救一个是一个。
+
+正文：
+① 我为啥开始：${ctx.pain}，想靠${topic}${pick(g.hook)}
+② 坑1：${pick(['没摸清平台规则就猛发', '内容太硬没人看', '盲目跟风热门'])}，白忙了${pick(['两周', '一个月'])}
+③ 坑2：${pick(['标题太平没点击', '封面没吸引力', '没找准人群'])}，发了跟没发一样
+④ 坑3：${pick(['太着急看数据', '一没流量就想放弃', '学了一堆用不上'])}，心态差点崩
+⑤ 转折：改了${pick(['标题写法', '封面风格', '发布节奏'])}之后，${pick(g.result)}
+⑥ 现在：不算厉害，但${goal}方向走对了
+
+结尾：
+${ctx.call}，${topic}别急，先把坑绕过去比啥都强。${g.cta}
+
+标签：#${tag} #${audience} #避坑 #${goal}`;
+
+      const experience = `【经验型】${topic}（${goal}）
+
+开头：
+作为一个${audience}，${topic}我折腾了${pick(['3个月', '大半年'])}，今天把真正管用的经验全倒出来。
+
+正文：
+① 起点：当时${ctx.pain}，就想试试${topic}能不能${pick(g.hook)}
+② 第一步：${pick(['先扒10个对标账号', '先定清楚发啥人群', '先小成本试一周'])}，别一上来就all in
+③ 第二步：${pick(['标题带情绪+数字', '封面字大、对比强', '固定时间发，别三天打鱼'])}，${goal}这块很关键
+④ 第三步：${pick(['看数据调内容', '评论区多互动', '爆款拆了照着优化'])}，慢慢就找到感觉了
+⑤ 心得：${pick(['真实比精致重要', '坚持比完美重要', '执行力比方法重要'])}
+⑥ 成果：${pick(g.result)}，数字不大但都是真的
+
+结尾：
+方法搁这了，能不能成看你怎么用。先收藏，回头照着做～
+
+标签：#${tag} #${audience}日常 #经验分享 #${goal}`;
+
+      const compare = `【对比型】${topic}（${goal}）
+
+开头：
+同样做${topic}，有人${pick(g.result)}，有人做了半年还是${pick(['没动静', '零收入', '粉丝不动'])}。差别在哪？我对比了三种路子。
+
+正文：
+① 路子A：${pick(['硬广式发文', '天天发同质内容', '花钱买粉'])} → ${pick(['没人看', '限流', '钱打水漂'])}
+② 路子B：${pick(['学对标改标题', '封面做反差感', '评论区认真回'])} → ${pick(['慢慢有起色', '开始有人互动', '数据往上走'])}
+③ 路子C（我现在用的）：${pick(['故事感开头', '干货+个人经历混合', '结尾留钩子'])} → ${pick(g.result)}，最适合${audience}
+④ 一张表对比：时间投入 / 成本 / ${goal}效果，一目了然
+⑤ 建议：${audience}优先试路子${pick(['B', 'C'])}，别重复我踩过的坑
+
+结尾：
+对照一下你现在用的哪种，不对就赶紧换。${g.cta}
+
+标签：#${tag} #对比测评 #${audience} #${goal}`;
+
+      return [pitfall, experience, compare];
+    }
+
+    function generateNote(topic, audience, goal) {
+      const ctx = AUDIENCE_CTX[audience];
+      const g = GOAL_CTX[goal];
+      const period = pick(['两个多月', '快半年', '三四个月']);
+      const days = pick(['21天', '30天', '一个半月']);
+
+      const title = pick([
+        `做了${period}${topic}，${audience}唠点实在的`,
+        `${ctx.pain}，我靠${topic}${days}有了变化`,
+        `关于${topic}${goal}，没人跟你说的几件事`
+      ]);
+
+      const goalParagraph = {
+        '涨粉': `现在粉丝虽然不算多，但${pick(['每天都在涨', '终于破千了', '最近几条互动明显多了'])}。说实话，涨粉这事儿急不来，内容对了人自然就来了。`,
+        '带货': `这段时间靠${topic}带货，${pick(['帮不少姐妹省了下冤枉钱', '小爆了几单挺开心的', '佣金到账那一刻真的爽'])}。不是啥大牌，就是自己用过觉得好的才推。`,
+        '引流': `引流这块，${pick(['私信确实多了', '加到的人质量还行', '资料发出去反馈不错'])}。关键是不能太硬，得让人觉得你是真分享不是来割的。`
+      }[goal];
+
+      const body = `${ctx.call}，今天不整那些虚头巴脑的，就聊聊我做${topic}这段时间的真实感受。
+
+先交代下背景：我是个普通${audience}，${ctx.pain}，${ctx.wish}。${pick(['刷小红书刷到的', '朋友安利', '自己琢磨出来的'])}，就开始试了。
+
+刚开始那叫一个懵。
+${pick([
+  '第一条发了半天不知道写啥，删了又写写了又删',
+  '看了好多教程越看越乱，完全不知道从哪下手',
+  '兴冲冲连发好几条，小眼睛两位数，差点把app删了'
+])}
+
+中间也栽过跟头👇
+· ${pick(['标题写太正经，根本没人点', '封面字太小，划过去就忘了', '内容太像广告，评论区冷清'])} 
+· ${pick(['白忙活了两周', '心态崩了好几次', '差点就想放弃了'])}
+
+后来慢慢摸出门道：
+① ${pick(['标题要带情绪，数字+反差最吃香', '封面就两三行字，字大对比强', '开头三行必须把人留住'])}
+② ${pick(['找对标账号，看别人怎么写的', '固定时间发，别三天打鱼两天晒网', '评论区认真回，真的有人会因为这个关注你'])}
+③ ${pick(['每周看一次数据，好的拆了复用', '别追求完美，先发出去再说', '保持真实感，别把自己演成另一个人'])}
+
+${days}下来，${goalParagraph}
+
+几点掏心窝的话：
+· ${topic}没有捷径，但也没你想的那么难
+· ${audience}时间碎，别追求完美，先干起来
+· ${pick(g.adj)}，适合自己的路子才是最好的
+
+还在纠结要不要开始的，我的建议：先干7天。想太多不如动手试一把。
+
+${g.cta}，看到都会回～
+
+${g.emoji} 觉得有用先收藏，回头用得上`;
+
+      const tags = `#${tagify(topic)} #${audience} #${goal} #真实分享 #小红书运营 #干货`;
+
+      return { title, body, tags };
+    }
+
+    function renderTitles(text) {
+      return text.split('\n').map(line => {
+        const m = line.match(/^(\d+)\.\s*(.+)/);
+        if (!m) return `<div class="item">${line}</div>`;
+        return `<div class="item"><span class="item-num">${m[1]}.</span>${m[2]}</div>`;
+      }).join('');
+    }
+
+    function renderCovers(text) {
+      return text.split('\n\n').map((block, i) => {
+        const lines = block.replace(/^\d+\.\s*/, '').split('\n');
+        return `<div class="item"><span class="item-num">${i + 1}.</span>${lines.join('<br>')}</div>`;
+      }).join('');
+    }
+
+    function renderTemplates(templates) {
+      return templates.map(t => {
+        const name = t.match(/【(.+?)】/)?.[1] || '';
+        const content = t.replace(/【.+?】[^\n]*\n?/, '').trim();
+        return `<div class="template-block"><h4>${name}</h4>${content.replace(/\n/g, '<br>')}</div>`;
+      }).join('');
+    }
+
+    function renderNote(note) {
+      return `<div class="note-title">${note.title}</div>${note.body.replace(/\n/g, '<br>')}<div class="note-tags">${note.tags}</div>`;
+    }
+
+    function getPlainText(id) {
+      const el = document.getElementById(id);
+      return el.innerText || el.textContent;
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg || '已复制到剪贴板 ✓';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2000);
+    }
+
+    async function copyText(text, btn) {
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      btn.textContent = '已复制 ✓';
+      btn.classList.add('copied');
+      showToast();
+      setTimeout(() => {
+        btn.textContent = '复制';
+        btn.classList.remove('copied');
+      }, 2000);
+    }
+
+    /* ============================================================
+     * 应用入口：事件绑定与初始化
+     * ============================================================ */
+    document.getElementById('btnGenerate').addEventListener('click', () => {
+      const topic = document.getElementById('topic').value.trim();
+      if (!topic) {
+        document.getElementById('topic').focus();
+        showToast('请先输入主题');
+        return;
+      }
+
+      if (!FreeLimitModule.canGenerate()) {
+        showToast('今日免费次数已用完，观看广告解锁12小时无限使用');
+        document.getElementById('btnAdUnlock').classList.remove('hidden');
+        return;
+      }
+
+      const audience = document.getElementById('audience').value;
+      const goal = document.getElementById('goal').value;
+      const unlimited = hasUnlimitedAccess();
+
+      const titlesFull = generateTitles(topic, audience, goal);
+      const coversFull = generateCovers(topic, audience, goal);
+      const templates = generateTemplates(topic, audience, goal);
+      const note = generateNote(topic, audience, goal);
+
+      AdManager.cacheFullContent({ titlesFull, coversFull, templates, note });
+
+      const titlesText = unlimited ? titlesFull : AdManager.limitTitles(titlesFull, FREE_TITLES);
+      const coversText = unlimited ? coversFull : AdManager.limitCovers(coversFull, FREE_COVERS);
+
+      document.getElementById('titlesContent').innerHTML = renderTitles(titlesText);
+      document.getElementById('coversContent').innerHTML = renderCovers(coversText);
+      document.getElementById('templatesContent').innerHTML = renderTemplates(templates);
+      document.getElementById('noteContent').innerHTML = renderNote(note);
+
+      document.getElementById('titlesContent').dataset.plain = titlesText;
+      document.getElementById('coversContent').dataset.plain = coversText;
+      document.getElementById('templatesContent').dataset.plain = templates.join('\n\n---\n\n');
+      document.getElementById('noteContent').dataset.plain = `${note.title}\n\n${note.body}\n\n${note.tags}`;
+
+      AdManager.applyLockState(unlimited);
+      FreeLimitModule.incrementUse();
+
+      document.getElementById('outputSection').classList.add('visible');
+
+      setTimeout(() => {
+        document.getElementById('blockTitles').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    });
+
+    document.querySelectorAll('.btn-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        if (!hasUnlimitedAccess() && (btn.id === 'copyTemplates' || btn.id === 'copyNote')) {
+          showRewardAd();
+          return;
+        }
+        const targetId = btn.dataset.target;
+        const el = document.getElementById(targetId);
+        const text = el.dataset.plain || getPlainText(targetId);
+        copyText(text, btn);
+      });
+    });
+
+    document.getElementById('topic').addEventListener('keydown', e => {
+      if (e.key === 'Enter') document.getElementById('btnGenerate').click();
+    });
+
+    document.getElementById('btnAdUnlock').addEventListener('click', () => showRewardAd());
+    document.querySelectorAll('.unlock-inline').forEach(btn => {
+      btn.addEventListener('click', () => showRewardAd());
+    });
+
+    FreeLimitModule.init();
+    AdManager.init();
+  </script>
+</body>
+</html>
