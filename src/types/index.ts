@@ -3,4 +3,5 @@ export interface Tool {
   description: string;
   icon: string;
   href: string;
+  available: boolean;
 }

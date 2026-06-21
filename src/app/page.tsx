@@ -8,36 +8,42 @@ const tools: Tool[] = [
     description: "输入主题，一键生成20条小红书爆款标题",
     icon: "✍️",
     href: "/tools/title-generator",
+    available: true,
   },
   {
     title: "AI 文案生成",
     description: "自动生成完整笔记正文，支持多种风格",
     icon: "📝",
     href: "/tools/copywriter",
+    available: true,
   },
   {
     title: "AI 改写",
     description: "改写已有文案，降低查重率，提升原创度",
     icon: "🔄",
-    href: "/tools/rewrite",
+    href: "#",
+    available: false,
   },
   {
     title: "AI 扩写",
     description: "将简短内容扩展为丰富详实的完整笔记",
     icon: "📈",
-    href: "/tools/expand",
+    href: "#",
+    available: false,
   },
   {
     title: "AI 缩写",
     description: "将长文精简为精华版，适合快速阅读",
     icon: "📋",
-    href: "/tools/summarize",
+    href: "#",
+    available: false,
   },
   {
     title: "敏感词检测",
     description: "检测文案中的敏感词和违规内容，安全发布",
     icon: "🔍",
-    href: "/tools/sensitive-check",
+    href: "#",
+    available: false,
   },
 ];
 
@@ -58,7 +64,7 @@ export default function HomePage() {
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {tools.map((tool) => (
-            <ToolCard key={tool.href} tool={tool} />
+            <ToolCard key={tool.title} tool={tool} />
           ))}
         </div>
       </section>
